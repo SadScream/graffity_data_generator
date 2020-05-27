@@ -1,0 +1,5 @@
+﻿__pycache__
+*.json
+auth_config.py
+*_UI.py
+addict_data.py
