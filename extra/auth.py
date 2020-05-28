@@ -126,4 +126,4 @@ class Ui_AuthWindow(QtWidgets.QDialog):
 		self.get_auth_code.setPlaceholderText(_translate("AuthWindow", "auth_code"))
 		self.confirm_auth_code.setText(_translate("AuthWindow", "Confirm"))
 
-import res_rc
+import extra.res_rc

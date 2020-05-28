@@ -84,8 +84,14 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 
 		if picture and peer_id:
 			self.data = self.upload_manager.uploader(self.vk, peer_id, picture)
-			response = self.vk.method("messages.send", values={"random_id": self.data[0], "peer_id": self.data[1], "attachment": self.data[2]})
-			# print(f"randint: {self.data[0]}\npeer_id: {self.data[1]}\nattachment: {self.data[2]}\n")
+
+			if self.data == False:
+				print("Error")
+				self.data = None
+				return
+
+			# response = self.vk.method("messages.send", values={"random_id": self.data[0], "peer_id": self.data[1], "attachment": self.data[2]})
+			print(f"randint: {self.data[0]}\npeer_id: {self.data[1]}\nattachment: {self.data[2]}\n")
 		else:
 			self.data = None
 

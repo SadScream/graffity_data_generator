@@ -1,7 +1,7 @@
 from json import dumps, loads
 import os
 
-from addict_data import data
+from extra.addict_data import data
 
 
 class Config:
@@ -35,7 +35,7 @@ class Config:
 		with open(self.file, "r", encoding="utf-8") as file:
 			data = loads(file.read(), encoding="utf-8")
 
-		return data["data"]
+		return data
 
 
 	def read(self, field):
@@ -58,10 +58,14 @@ class Config:
 			elif isinstance(data[field], str) or isinstance(data[field], int) or data[field] == None:
 				data[field] = item
 
+			else:
+				print(f"[{os.path.split(__file__)[1]} => {self.write.__name__}] field `{field}` not in data")
+				return False
+
 			with open(self.file, "r+", encoding="utf-8") as file:
-				file.write(dumps({"data": data}, ensure_ascii=False, indent=4))
+				file.write(dumps(data, ensure_ascii=False, indent=4))
 
 			print(f"[{self.write.__name__}] Dumped!")
 		else:
-			print(f"[{os.path.split(__file__)[1]} => {self.write.__name__}] field `{field}` not in data")
+			print(f"[{os.path.split(__file__)[1]} => {self.write.__name__}] Unknown data")
 			return False
