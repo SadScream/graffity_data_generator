@@ -1,7 +1,7 @@
 from json import dumps, loads
 import os
 
-from extra.addict_data import data
+from addict_data import data
 
 
 class Config:

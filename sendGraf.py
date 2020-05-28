@@ -3,8 +3,8 @@
 from extra import fix_qt_import_error
 
 # import requests
-import threading
-import random
+# import threading
+# import random
 import vk_api
 import sys
 import os

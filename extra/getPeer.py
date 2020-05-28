@@ -164,4 +164,4 @@ class Ui_PeerWindow(QtWidgets.QDialog):
 		self.confirm_user_id.setText(_translate("PeerWindow", "Confirm"))
 		self.get_peer_id_from_window.setPlaceholderText(_translate("PeerWindow", "peer_id"))
 
-import extra.res_rc
+import res_rc

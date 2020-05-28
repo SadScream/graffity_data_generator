@@ -80,4 +80,4 @@ class Ui_Main(object):
 		self.get_button.setText(_translate("Main", "Get"))
 		self.path_button.setText(_translate("Main", "..."))
 		self.user_id_button.setText(_translate("Main", "..."))
-import extra.res_rc
+import res_rc
