@@ -7,13 +7,18 @@ class Upload:
 		self.vk_api = vk_api
 		self.config = config
 
-	def uploader(self, vk, peer, pic):
+	def uploader(self, vk, type_of_file, peer, file):
 		self.peer = int(peer)
-		self.pic = pic
 
 		upload = self.vk_api.VkUpload(vk)
-		save = upload.graffiti(pic)
-		attachment = f"doc{save['graffiti']['owner_id']}_{save['graffiti']['id']}_{save['graffiti']['access_key']}"
+
+		if type_of_file == "graffiti":
+			save = upload.graffiti(file)
+			attachment = f"doc{save['graffiti']['owner_id']}_{save['graffiti']['id']}_{save['graffiti']['access_key']}"
+		else:
+			save = upload.audio_message(file)
+			attachment = f"doc{save['audio_message']['owner_id']}_{save['audio_message']['id']}_{save['audio_message']['access_key']}"
+
 		digit = self.randomizer(self.config)
 
 		if self.peer < 1000:

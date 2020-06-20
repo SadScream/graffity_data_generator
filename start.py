@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from extra import fix_qt_import_error
-
-# import requests
-# import threading
-# import random
 import vk_api
 import sys
 import os
+
+from extra import fix_qt_import_error
 
 from PyQt5 import QtWidgets, QtGui
 
@@ -51,7 +48,6 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 		self.setupUi(self)
 
 		self.config = config_handler.Config(os.path.join(DIRECTORY, "config.json"))
-		PICTURES, PEERS = self.get_data()
 
 		self.vk_auth = AuthManager(vk_api)
 		self.peer_manager = PeerManager(self)
@@ -67,8 +63,22 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 		self.show()
 
 
+	def change_current_type(self, t):
+		# 0 if graffiti 1 if audio-message
+		self.get_path.discharge()
+		self.current_type = t
+
+		if t == 0:
+			self.path = self.config.read("path_to_img")
+		else:
+			self.path = self.config.read("path_to_audio")
+
+
 	def constructor(self):
-		self.path = self.config.read("path")
+		self.setFocus()
+		self.path = None
+
+		self.current_type = 0
 
 		for k, v in self.config.read("peers").items():
 			self.peer_manager.user_list.addPeer(k, v)
@@ -77,13 +87,20 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 		self.path_button.clicked.connect(self.open_path)
 		self.get_button.clicked.connect(self.readyToUpload)
 
+		self.graffitiB.toggled.connect(lambda: self.change_current_type(0))
+		self.audioB.toggled.connect(lambda: self.change_current_type(1))
+		self.graffitiB.toggle()
+
 
 	def readyToUpload(self):
-		picture = self.get_path.text()
+		file = self.get_path.path
 		peer_id = self.get_peer_id.text()
 
-		if picture and peer_id:
-			self.data = self.upload_manager.uploader(self.vk, peer_id, picture)
+		if file and peer_id:
+			self.data = self.upload_manager.uploader(vk=self.vk,
+													type_of_file = "audio" if self.current_type else "graffiti",
+													peer=peer_id,
+													file=file)
 
 			if self.data == False:
 				print("Error")
@@ -105,43 +122,30 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 		file = QtWidgets.QFileDialog.getOpenFileName(None, 'Выберите файл:', path)[0]
 
 		if file != '':
-			'''TODO: add confirming of file extension(png/jpeg/jpg..etc)'''
+			if (self.current_type and self.check(file, "audio")) or (not self.current_type and self.check(file, "img")):
+				self.get_path.path = file
 
-			self.get_path.setText(file)
-			self.config.write("path", os.path.dirname(file))
-			self.path = os.path.dirname(file)
+				self.config.write(field= "path_to_audio" if self.current_type else "path_to_img", item=os.path.dirname(file))
+
+				self.path = os.path.dirname(file)
+			else:
+				self.get_path.setLastPath()
 
 
-	def get_data(self):
+	def check(self, path_of_pic, flag):
+		'''returns True if it's not dir and file extension matches the flag
+		:flag: "img" or "audio"
 		'''
-		returns list if pictures and list of peers
-		'''
-
-		if "pictures" in os.listdir(DIRECTORY):
-			picture_path = os.path.join(DIRECTORY, "pictures")
-			pics = os.listdir(picture_path)
-		else:
-			return False, False
-
-		pictures = sorted([os.path.splitext(picture)[0] for picture in pics if self.is_png(picture_path, picture)]) # getting sorted list of pictures
-
-		peers = list(self.config.read("peers").items()) # getting peers data in format [(PEER_NAME_1, PEER_ID_1), (PEER_NAME_2, PEER_ID_2), ...]
-
-		return pictures, peers
-
-
-	def is_png(self, path, pic):
-		'''
-		returns True if it's not dir and file extension is png
-		'''
-
-		path_of_pic = os.path.join(path, pic)
 
 		if os.path.isfile(path_of_pic):
 			_, file_extension = os.path.splitext(path_of_pic) # returns (filename, file_ext)
 
-			if file_extension == ".png":
+			if flag == "img" and file_extension in [".png", ".jpg", ".gif", ".jpeg"]:
 				return True
+			elif flag == "audio" and file_extension == ".ogg":
+				return True
+			else:
+				return False
 		else:
 			return False
 		

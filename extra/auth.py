@@ -20,7 +20,7 @@ class Ui_AuthWindow(QtWidgets.QDialog):
 		self.key = None
 
 		self.setupUi(self)
-
+	
 
 	def constructor(self):
 		self.confirm_auth_code.clicked.connect(self.check_auth_code)
