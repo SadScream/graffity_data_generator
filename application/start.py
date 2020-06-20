@@ -140,7 +140,7 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 		if os.path.isfile(path_of_pic):
 			_, file_extension = os.path.splitext(path_of_pic) # returns (filename, file_ext)
 
-			if flag == "img" and file_extension in [".png", ".jpg", ".gif", ".jpeg"]:
+			if flag == "img" and file_extension in [".png", ".gif"]:
 				return True
 			elif flag == "audio" and file_extension == ".ogg":
 				return True
