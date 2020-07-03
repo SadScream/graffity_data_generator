@@ -3,22 +3,23 @@
 import vk_api
 import sys
 import os
+from importlib import import_module
 
-from extra import fix_qt_import_error
+from PySide2 import QtWidgets, QtGui, QtCore
 
-from PyQt5 import QtWidgets, QtGui
+from .extra import config_handler
 
-from extra import config_handler
+from .extra.design import Ui_Main
+from .extra.getPeer import Ui_PeerWindow
+from .extra.auth import Ui_AuthWindow
+from .extra.upload import Upload
 
-from extra.design import Ui_Main
-from extra.getPeer import Ui_PeerWindow
-from extra.auth import Ui_AuthWindow
-from extra.upload import Upload
+from . import auth_config as module
 
-from auth_config import LOGIN, PASSWORD # str, str
-
-
+LOGIN, PASSWORD = module.LOGIN, module.PASSWORD # str, str
 DIRECTORY = os.getcwd()
+
+del module
 
 
 class AuthManager(Ui_AuthWindow): # 
@@ -39,6 +40,32 @@ class UploadManager(Upload):
 
 	def __init__(self, *args):
 		super().__init__(*args)
+
+
+
+
+
+
+
+
+
+
+
+''' 
+ДОБАВИТЬ ВОЗМОЖНОСТЬ ОТМЕНЫ УДАЛЕНИЯ НАЖАТИЕМ СОЧЕТАНИЯ CTRL+Z
+'''
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class Window(QtWidgets.QMainWindow, Ui_Main):
@@ -63,6 +90,12 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 		self.show()
 
 
+	def closeEvent(self, e:QtCore.QEvent):
+		print("Closing app...")
+		self.config.close()
+		e.accept()
+
+
 	def change_current_type(self, t):
 		# 0 if graffiti 1 if audio-message
 		self.get_path.discharge()
@@ -81,7 +114,7 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 		self.current_type = 0
 
 		for k, v in self.config.read("peers").items():
-			self.peer_manager.user_list.addPeer(k, v)
+			self.peer_manager.addPeer(k, v)
 
 		self.user_id_button.clicked.connect(self.peer_manager.Open)
 		self.path_button.clicked.connect(self.open_path)
@@ -148,10 +181,8 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 				return False
 		else:
 			return False
-		
 
 
-if __name__=="__main__":
-	app = QtWidgets.QApplication(sys.argv)
-	window = Window()
-	sys.exit(app.exec_())
+app = QtWidgets.QApplication(sys.argv)
+window = Window()
+sys.exit(app.exec_())

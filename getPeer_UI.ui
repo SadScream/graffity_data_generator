@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>211</width>
+    <width>191</width>
     <height>241</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>191</width>
+    <height>241</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>191</width>
+    <height>241</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>PeerID</string>
@@ -20,9 +32,9 @@
   <widget class="QPushButton" name="confirm_user_id">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>130</x>
      <y>10</y>
-     <width>62</width>
+     <width>51</width>
      <height>23</height>
     </rect>
    </property>
@@ -35,7 +47,7 @@
     <rect>
      <x>10</x>
      <y>12</y>
-     <width>121</width>
+     <width>111</width>
      <height>20</height>
     </rect>
    </property>
@@ -52,7 +64,7 @@
     <string>peer_id</string>
    </property>
   </widget>
-  <widget class="QListView" name="user_list">
+  <widget class="QListView" name="peer_list">
    <property name="geometry">
     <rect>
      <x>10</x>

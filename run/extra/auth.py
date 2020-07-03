@@ -7,7 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PySide2 import QtCore, QtGui, QtWidgets
+from . import res_rc
 
 
 class Ui_AuthWindow(QtWidgets.QDialog):
@@ -41,7 +42,7 @@ class Ui_AuthWindow(QtWidgets.QDialog):
 
 
 	def _get_vk_session(self, login, password):
-		print(f"[{self.get_vk_session.__name__}] Authorizing...", end="")
+		print(f"[{self.get_vk_session.__name__}] Authorization...", end="")
 
 		try:
 			self.vk_session = self.vk_api.VkApi(login=login, password=password, auth_handler=self.auth_handler)
@@ -125,5 +126,3 @@ class Ui_AuthWindow(QtWidgets.QDialog):
 		self.label.setText(_translate("AuthWindow", "Auth code:"))
 		self.get_auth_code.setPlaceholderText(_translate("AuthWindow", "auth_code"))
 		self.confirm_auth_code.setText(_translate("AuthWindow", "Confirm"))
-
-import res_rc

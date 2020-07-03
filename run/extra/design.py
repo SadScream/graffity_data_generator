@@ -7,9 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PySide2 import QtCore, QtGui, QtWidgets
 from os.path import basename, exists, splitext
-import res_rc
+from . import res_rc
 
 
 class PathEdit(QtWidgets.QLineEdit):
