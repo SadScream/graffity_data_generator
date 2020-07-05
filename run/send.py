@@ -15,6 +15,7 @@ from .extra.upload import Upload
 
 from . import auth_config as module
 
+
 # LOGIN, PASSWORD = module.LOGIN, module.PASSWORD # str, str
 TOKEN = module.TOKEN
 DIRECTORY = os.getcwd()
