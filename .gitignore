@@ -1,6 +1,7 @@
 ﻿__pycache__
 *.json
 auth_config.py
+auth.py
 *_UI.py
 addict_data.py
 pictures

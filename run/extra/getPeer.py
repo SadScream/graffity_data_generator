@@ -45,7 +45,15 @@ class Ui_PeerWindow(QDialog):
 
 	def Open(self):
 		self.discard_peer_id_field = True
+		self.setFocus()
 		self.exec_()
+
+
+	def keyPressEvent(self, event:QEvent):
+		if event.key() == 90 and event.modifiers() == Qt.ControlModifier:
+			self.peer_list.keyPressEvent(event)
+		else:
+			super().keyPressEvent(event)
 
 
 	def closeEvent(self, e):
@@ -73,12 +81,15 @@ class Ui_PeerWindow(QDialog):
 	def addPeer(self, id_, name):
 		self.peer_list.addPeer(name, id_)
 
+		if hasattr(self.window, "config") and (id_ not in self.window.config.read("peers")):
+			self.window.config.write("peers", {id_: name})
+
 
 	def deletePeer(self, id_):
 		for i, peer in enumerate(self.peer_list.getPeers()):
 			if peer.id == id_:
 				self.peer_list.deletePeer(i)
-				self.parent.window.config.remove("peers", id_)
+				# self.window.config.remove("peers", id_)
 	
 
 	def setupUi(self):
@@ -131,16 +142,31 @@ class List(QListView):
 		self.removed.connect(self.deletePeer)
 		self.rightClicked.connect(self._rightClicked)
 		self.length = 0
+		self.deleted_peer = None
 
 
 	@Slot()
 	def _rightClicked(self, row:int, e:QEvent):
 		''' opens a context menu '''
 
-		peer:QStandardItem = self.getPeerByIndex(row)
+		peer = self.getPeerByIndex(row)
 
 		self.setSelection(self.rectForIndex(self.model.indexFromItem(peer)), QItemSelectionModel.ClearAndSelect)
 		peer.popMenu.exec_(self.mapToGlobal(e.pos()))
+
+
+	def keyPressEvent(self, event:QEvent):
+		if event.key() == 90 and event.modifiers() == Qt.ControlModifier:
+			if self.deleted_peer:
+				peer = self.deleted_peer
+				self.addPeer(peer[1], peer[0], peer[2]) # addPeer(name, id_)  /  peer = (id_, name, indexAt)
+
+				if hasattr(self.parent.window, "config"):
+					self.parent.window.config.write("peers", (peer[2], (peer[0], peer[1])))
+
+				self.deleted_peer = None
+		else:
+			event.ignore()
 
 
 	def mousePressEvent(self, event:QEvent):
@@ -162,7 +188,7 @@ class List(QListView):
 
 		peer = self.getPeers()[index]
 
-		print(f"\"{peer.id}\": \"{peer.name}\"\t...", end="")
+		print(f"\"{peer.id}\":\t\"{peer.name}\"\t...", end="")
 
 		self.model.removeRow(index)
 		self.length -= 1
@@ -172,13 +198,21 @@ class List(QListView):
 
 		self.parent.get_peer_id_from_window.setText("")
 		self.discardSelection()
+		self.deleted_peer = (peer.id, peer.name, peer.indexAt)
 
 		print("deleted!")
 
 
-	def addPeer(self, name, id_):
-		self.model.appendRow(PeerItem(self, name = name, id_ = id_))
+	def addPeer(self, name:str, id_:str, index:int = None):
+		if isinstance(index, int):
+			self.model.insertRow(index, PeerItem(self, name=name, id_=id_, indexAt=index))
+		else:
+			self.model.appendRow(PeerItem(self, name=name, id_=id_))
+		
 		self.length += 1
+		
+		if not isinstance(index, int):
+			self.getPeers()[-1].getIndex()
 
 
 	def getPeers(self) -> list:
@@ -205,7 +239,7 @@ class List(QListView):
 
 
 	def changeTipedPeer(self):
-		'''меняем значение поля с peer_id на то, по которому тыкнули'''
+		'''меняем значение поля с id на значение peer.id того объекта, по которому тыкнули'''
 
 		self.parent.get_peer_id_from_window.setText(str(self.getPeerByIndex(self.selectedPeer)))
 
@@ -234,12 +268,13 @@ class PeerItem(QStandardItem):
 	:param id_: an id of peer
 	'''
 
-	def __init__(self, view:List, name:str, id_:str):
+	def __init__(self, view:List, name:str, id_:str, indexAt:int = None):
 		super().__init__(name)
 
 		self.view = view
 		self.name = name
 		self.id = id_
+		self.indexAt = indexAt
 
 		self.setEditable(False)
 
@@ -247,6 +282,11 @@ class PeerItem(QStandardItem):
 		icon = QIcon()
 		icon.addPixmap(QPixmap(":/icons/icons/remove.png"), QIcon.Normal, QIcon.Off)
 		self.popMenu.addAction(icon, 'Remove', lambda: self.view.removed.emit(self.row()))
+
+
+	def getIndex(self):
+		if getattr(self, "indexAt", None) == None:
+			self.indexAt = self.row()
 
 
 	def __str__(self):

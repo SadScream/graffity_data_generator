@@ -11,22 +11,33 @@ from .extra import config_handler
 
 from .extra.design import Ui_Main
 from .extra.getPeer import Ui_PeerWindow
-from .extra.auth import Ui_AuthWindow
 from .extra.upload import Upload
 
 from . import auth_config as module
 
-LOGIN, PASSWORD = module.LOGIN, module.PASSWORD # str, str
+# LOGIN, PASSWORD = module.LOGIN, module.PASSWORD # str, str
+TOKEN = module.TOKEN
 DIRECTORY = os.getcwd()
 
 del module
 
 
-class AuthManager(Ui_AuthWindow): # 
+class AuthManager(): # 
 
-	def __init__(self, *args):
-		super().__init__(*args)
-		self.constructor()
+	# def __init__(self, *args):
+	# 	super().__init__(*args)
+	# 	self.constructor()
+
+	def __init__(self, vk_api):
+		self.vk_session = None
+		self.vk_api = vk_api
+
+
+	def auth(self, token):
+		vk_session = self.vk_api.VkApi(token=token, api_version=5.103)
+		vk_client = vk_session.get_api()
+
+		return vk_client
 
 
 class PeerManager(Ui_PeerWindow): # 
@@ -43,31 +54,6 @@ class UploadManager(Upload):
 
 
 
-
-
-
-
-
-
-
-
-''' 
-ДОБАВИТЬ ВОЗМОЖНОСТЬ ОТМЕНЫ УДАЛЕНИЯ НАЖАТИЕМ СОЧЕТАНИЯ CTRL+Z
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Window(QtWidgets.QMainWindow, Ui_Main):
 
 	def __init__(self):
@@ -78,9 +64,10 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 
 		self.vk_auth = AuthManager(vk_api)
 		self.peer_manager = PeerManager(self)
-		self.upload_manager = UploadManager(vk_api, self.config)
+		self.upload_manager = UploadManager(vk_api)
 		
-		self.vk = self.vk_auth.get_vk_session(LOGIN, PASSWORD)
+		# self.vk = self.vk_auth.get_vk_session(LOGIN, PASSWORD)
+		self.vk = self.vk_auth.auth(TOKEN)
 		self.data = None
 
 		if not self.vk:
@@ -118,7 +105,7 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 
 		self.user_id_button.clicked.connect(self.peer_manager.Open)
 		self.path_button.clicked.connect(self.open_path)
-		self.get_button.clicked.connect(self.readyToUpload)
+		self.send_button.clicked.connect(self.readyToUpload)
 
 		self.graffitiB.toggled.connect(lambda: self.change_current_type(0))
 		self.audioB.toggled.connect(lambda: self.change_current_type(1))
@@ -128,8 +115,10 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 	def readyToUpload(self):
 		file = self.get_path.path
 		peer_id = self.get_peer_id.text()
+		msg = self.get_message.text()
 
 		if file and peer_id:
+			self.get_message.setText("")
 			self.data = self.upload_manager.uploader(vk=self.vk,
 													type_of_file = "audio" if self.current_type else "graffiti",
 													peer=peer_id,
@@ -140,10 +129,31 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 				self.data = None
 				return
 
-			# response = self.vk.method("messages.send", values={"random_id": self.data[0], "peer_id": self.data[1], "attachment": self.data[2]})
 			print(f"randint: {self.data[0]}\npeer_id: {self.data[1]}\nattachment: {self.data[2]}\n")
+			self.write_msg(self.vk, random_id=self.data[0], peer_id=self.data[1], message = msg, attachment=self.data[2])
 		else:
 			self.data = None
+
+
+	def write_msg(self, vk_client, random_id: int, peer_id: int, message: str, attachment=None, keyboard=None):
+		"""
+		Send message to chat
+	 
+		:param vk_client: VK client
+		:param peer_id: peer user ID
+		:param random_id: random id
+		:param message: message text
+		:param attachment: message attachment(if exist)
+		:param keyboard: message keyboard(if exist)
+		"""
+		
+		vk_client.messages.send(
+				random_id=random_id,
+				peer_id=peer_id,
+				message=message,
+				attachment=attachment,
+				keyboard=keyboard,
+			)
 
 
 	def open_path(self):

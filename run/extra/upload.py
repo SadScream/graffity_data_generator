@@ -1,12 +1,12 @@
 import random
 import os
+import vk_api
 
 
 class Upload:
 
-	def __init__(self, vk_api, config):
+	def __init__(self, vk_api:vk_api):
 		self.vk_api = vk_api
-		self.config = config
 
 	def uploader(self, vk, type_of_file, peer, file):
 		print(f"[{self.uploader.__name__}] going to upload:\n\t{peer}\n\t{file}")
@@ -25,18 +25,9 @@ class Upload:
 			print(f"{os.path.split(__file__)[1]} => {self.uploader.__name__} [EXCEPTION] while trying to upload file:\t{E}")
 			return (None, None, None)
 
-		digit = self.randomizer(self.config)
+		digit = self.vk_api.utils.get_random_id()
 
 		if self.peer < 1000:
 			self.peer += 2000000000
 
 		return (digit, self.peer, attachment)
-
-	def randomizer(self, config):
-		digit = random.randint(-9223372036854775808, 9223372036854775807)
-
-		if digit not in config.read("generated"):
-			config.write("generated", digit)
-			return digit
-		else:
-			return self.randomizer()

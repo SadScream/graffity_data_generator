@@ -7,12 +7,17 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide2.QtCore import (QCoreApplication, QDate, QDateTime, QMetaObject,
+    QObject, QPoint, QRect, QSize, QTime, QUrl, Qt)
+from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
+    QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter,
+    QPixmap, QRadialGradient)
+from PySide2.QtWidgets import *
 from os.path import basename, exists, splitext
 from . import res_rc
 
 
-class PathEdit(QtWidgets.QLineEdit):
+class PathEdit(QLineEdit):
 
 	def __init__(self, parent):
 		super().__init__(parent)
@@ -60,7 +65,7 @@ class PathEdit(QtWidgets.QLineEdit):
 		return super().setText(self.path_[1])
 
 
-class PathButton(QtWidgets.QPushButton):
+class PathButton(QPushButton):
 
 	def __init__(self, parent, window):
 		super().__init__(parent)
@@ -75,63 +80,76 @@ self.path_button = PathButton(self.centralwidget, self)
 
 
 class Ui_Main(object):
-	def setupUi(self, Main):
-		Main.setObjectName("Main")
-		Main.resize(232, 181)
-		Main.setMinimumSize(QtCore.QSize(232, 181))
-		Main.setMaximumSize(QtCore.QSize(232, 181))
-		icon = QtGui.QIcon()
-		icon.addPixmap(QtGui.QPixmap(":/icons/icons/main.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-		Main.setWindowIcon(icon)
-		self.centralwidget = QtWidgets.QWidget(Main)
-		self.centralwidget.setObjectName("centralwidget")
-		self.label = QtWidgets.QLabel(self.centralwidget)
-		self.label.setGeometry(QtCore.QRect(20, 20, 81, 21))
-		self.label.setObjectName("label")
-		self.label_2 = QtWidgets.QLabel(self.centralwidget)
-		self.label_2.setGeometry(QtCore.QRect(20, 100, 81, 16))
-		self.label_2.setObjectName("label_2")
-		self.get_path = PathEdit(self.centralwidget)
-		self.get_path.setGeometry(QtCore.QRect(100, 100, 91, 20))
-		self.get_path.setDragEnabled(True)
-		self.get_path.setReadOnly(False)
-		self.get_path.setObjectName("get_path")
-		self.get_peer_id = QtWidgets.QLineEdit(self.centralwidget)
-		self.get_peer_id.setGeometry(QtCore.QRect(100, 20, 91, 20))
-		self.get_peer_id.setObjectName("get_peer_id")
-		self.get_button = QtWidgets.QPushButton(self.centralwidget)
-		self.get_button.setGeometry(QtCore.QRect(80, 150, 75, 23))
-		self.get_button.setObjectName("get_button")
-		self.path_button = PathButton(self.centralwidget, self)
-		self.path_button.setGeometry(QtCore.QRect(190, 100, 23, 21))
-		self.path_button.setObjectName("path_button")
-		self.user_id_button = QtWidgets.QPushButton(self.centralwidget)
-		self.user_id_button.setGeometry(QtCore.QRect(190, 20, 23, 21))
-		self.user_id_button.setObjectName("user_id_button")
-		self.graffitiB = QtWidgets.QRadioButton(self.centralwidget)
-		self.graffitiB.setGeometry(QtCore.QRect(100, 50, 101, 17))
-		self.graffitiB.setObjectName("graffitiB")
-		self.audioB = QtWidgets.QRadioButton(self.centralwidget)
-		self.audioB.setGeometry(QtCore.QRect(100, 70, 101, 17))
-		self.audioB.setObjectName("audioB")
-		self.label_4 = QtWidgets.QLabel(self.centralwidget)
-		self.label_4.setGeometry(QtCore.QRect(20, 60, 81, 16))
-		self.label_4.setObjectName("label_4")
-		Main.setCentralWidget(self.centralwidget)
+    def setupUi(self, Main):
+        if not Main.objectName():
+            Main.setObjectName(u"Main")
+        Main.resize(232, 211)
+        Main.setMinimumSize(QSize(232, 211))
+        Main.setMaximumSize(QSize(232, 211))
+        icon = QIcon()
+        icon.addFile(u":/icons/icons/main.png", QSize(), QIcon.Normal, QIcon.Off)
+        Main.setWindowIcon(icon)
+        self.centralwidget = QWidget(Main)
+        self.centralwidget.setObjectName(u"centralwidget")
+        self.label = QLabel(self.centralwidget)
+        self.label.setObjectName(u"label")
+        self.label.setGeometry(QRect(20, 20, 81, 21))
+        self.label_2 = QLabel(self.centralwidget)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setGeometry(QRect(20, 100, 81, 16))
+        self.get_path = PathEdit(self.centralwidget)
+        self.get_path.setObjectName(u"get_path")
+        self.get_path.setGeometry(QRect(100, 100, 91, 20))
+        self.get_path.setDragEnabled(True)
+        self.get_path.setReadOnly(False)
+        self.get_peer_id = QLineEdit(self.centralwidget)
+        self.get_peer_id.setObjectName(u"get_peer_id")
+        self.get_peer_id.setGeometry(QRect(100, 20, 91, 20))
+        self.send_button = QPushButton(self.centralwidget)
+        self.send_button.setObjectName(u"send_button")
+        self.send_button.setGeometry(QRect(80, 180, 75, 23))
+        self.path_button = PathButton(self.centralwidget, self)
+        self.path_button.setObjectName(u"path_button")
+        self.path_button.setGeometry(QRect(190, 100, 23, 21))
+        self.user_id_button = QPushButton(self.centralwidget)
+        self.user_id_button.setObjectName(u"user_id_button")
+        self.user_id_button.setGeometry(QRect(190, 20, 23, 21))
+        self.graffitiB = QRadioButton(self.centralwidget)
+        self.graffitiB.setObjectName(u"graffitiB")
+        self.graffitiB.setGeometry(QRect(100, 50, 101, 17))
+        self.audioB = QRadioButton(self.centralwidget)
+        self.audioB.setObjectName(u"audioB")
+        self.audioB.setGeometry(QRect(100, 70, 101, 17))
+        self.label_4 = QLabel(self.centralwidget)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setGeometry(QRect(20, 60, 81, 16))
+        self.get_message = QLineEdit(self.centralwidget)
+        self.get_message.setObjectName(u"get_message")
+        self.get_message.setGeometry(QRect(100, 130, 111, 20))
+        self.get_message.setMaxLength(4096)
+        self.get_message.setDragEnabled(True)
+        self.label_3 = QLabel(self.centralwidget)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setGeometry(QRect(20, 130, 81, 16))
+        Main.setCentralWidget(self.centralwidget)
 
-		self.retranslateUi(Main)
-		QtCore.QMetaObject.connectSlotsByName(Main)
+        self.retranslateUi(Main)
 
-	def retranslateUi(self, Main):
-		_translate = QtCore.QCoreApplication.translate
-		Main.setWindowTitle(_translate("Main", "Sender"))
-		self.label.setText(_translate("Main", "Target"))
-		self.label_2.setText(_translate("Main", "File"))
-		self.get_path.setPlaceholderText(_translate("Main", "path"))
-		self.get_peer_id.setPlaceholderText(_translate("Main", "peer_id"))
-		self.get_button.setText(_translate("Main", "Get"))
-		self.path_button.setText(_translate("Main", "..."))
-		self.user_id_button.setText(_translate("Main", "..."))
-		self.graffitiB.setText(_translate("Main", "Graffiti"))
-		self.audioB.setText(_translate("Main", "Audio-message"))
-		self.label_4.setText(_translate("Main", "Type"))
+        QMetaObject.connectSlotsByName(Main)
+    # setupUi
+
+    def retranslateUi(self, Main):
+        Main.setWindowTitle(QCoreApplication.translate("Main", u"Sender", None))
+        self.label.setText(QCoreApplication.translate("Main", u"Target", None))
+        self.label_2.setText(QCoreApplication.translate("Main", u"File", None))
+        self.get_path.setPlaceholderText(QCoreApplication.translate("Main", u"path", None))
+        self.get_peer_id.setPlaceholderText(QCoreApplication.translate("Main", u"peer_id", None))
+        self.send_button.setText(QCoreApplication.translate("Main", u"Send", None))
+        self.path_button.setText(QCoreApplication.translate("Main", u"...", None))
+        self.user_id_button.setText(QCoreApplication.translate("Main", u"...", None))
+        self.graffitiB.setText(QCoreApplication.translate("Main", u"Graffiti", None))
+        self.audioB.setText(QCoreApplication.translate("Main", u"Audio-message", None))
+        self.label_4.setText(QCoreApplication.translate("Main", u"Type", None))
+        self.get_message.setPlaceholderText(QCoreApplication.translate("Main", u"text", None))
+        self.label_3.setText(QCoreApplication.translate("Main", u"Message", None))
+    # retranslateUi

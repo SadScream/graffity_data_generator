@@ -73,6 +73,14 @@ class Config:
 
 			if isinstance(_field, list):
 				self.data[field].append(item)
+
+			elif (isinstance(_field, dict) and isinstance(item, dict)):
+				self.data[field].update(item)
+
+			elif (isinstance(_field, dict) and isinstance(item, tuple)):
+				temp = list(self.data[field].items())
+				temp.insert(item[0], item[1])
+				self.data[field] = dict(temp)
 				
 			elif (isinstance(_field, str) or 
 				 isinstance(_field, int) or 
