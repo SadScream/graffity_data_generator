@@ -1,7 +1,7 @@
 # Sender
 launch by run this command in cmd: ```python -m run``` or by running sender.bat
 
-.\run\auth_config.py should contain variable `TOKEN` equals to your vk token with access to vk_api messages section
+.\run\auth_config.py should contain variable `TOKEN` equals to your vk token with access to vk-api messages section
 
 .\run\extra\addict_data.py should contain variable named `data` and type of dictionary.
 This dictionary must contain field: 'path_to_img', 'path_to_audio', 'peers'
