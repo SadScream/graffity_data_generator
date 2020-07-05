@@ -1,4 +1,9 @@
-.\extra\addict_data.py should contain variable named `data` and type of dictionary. It should contains field: 'generated', 'path', 'peers'
-`generated` - a list of integers, containing generated random ints for messages
-`path` - path to the directory with pictures(default = None)
-`peers` - a dictonary of peers where keys are names of dialogs and values are peer ids 
+# Sender
+launch by run this command in cmd: ```python -m run``` or by running sender.bat
+
+.\run\auth_config.py should contain variable `TOKEN` equals to your vk token with access to vk_api messages section
+
+.\run\extra\addict_data.py should contain variable named `data` and type of dictionary.
+This dictionary must contain field: 'path_to_img', 'path_to_audio', 'peers'
+`path_to_img` and `path_to_audio` by default should be equals to `None`
+`peers` is a dictonary of peers where keys are ids of peers(for example, 11 for conversation or 1234567 for dialog with user) and values are names of dialogs(i'm too lazy to automate this)
