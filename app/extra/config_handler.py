@@ -14,7 +14,7 @@ class Config:
 		if os.path.exists(path):
 			if os.path.isfile(path):
 				self.file = path
-				print(f"successfully got file: '''{self.file}'''\t", end="")
+				print(f"successfully got file: '''{self.file}''' ", end="")
 			else:
 				print(f"it's not a file, exception...")
 				raise Exception("Config is't a file")
@@ -119,3 +119,19 @@ class Config:
 			return False
 
 		return True
+
+
+	def rewrite(self, name, new_name, id_, new_id):
+		'''only for peers'''
+
+		new = {}
+
+		for k, v in self.data["peers"].items():
+			if k == id_:
+				k = new_id
+			if v == name:
+				v = new_name
+
+			new[k] = v
+
+		self.data["peers"] = new

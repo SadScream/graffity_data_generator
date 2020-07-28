@@ -1,5 +1,5 @@
 # Sender
-launch by run this command in cmd: ```python -m run``` or by running sender.bat
+launch by run this command in cmd: ```python -m app``` or by running sender.bat
 
 .\run\auth_config.py should contain variable `TOKEN` equals to your vk token with access to vk-api messages section
 

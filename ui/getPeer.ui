@@ -29,17 +29,44 @@
    <iconset resource="res.qrc">
     <normaloff>:/icons/icons/main.png</normaloff>:/icons/icons/main.png</iconset>
   </property>
-  <widget class="QPushButton" name="confirm_user_id">
+  <property name="styleSheet">
+   <string notr="true">QDialog {
+background: rgb(230, 230, 230);
+}
+
+QPushButton {
+border: None;
+background: rgb(230, 230, 230);
+}
+
+QPushButton:pressed {
+background: rgb(210, 210, 210);
+}</string>
+  </property>
+  <widget class="QPushButton" name="confirm_peer_id">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>160</x>
      <y>10</y>
-     <width>51</width>
+     <width>21</width>
      <height>23</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
-    <string>Confirm</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/icons/passed.png</normaloff>:/icons/icons/passed.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>26</width>
+     <height>26</height>
+    </size>
    </property>
   </widget>
   <widget class="QLineEdit" name="get_peer_id_from_window">
@@ -77,6 +104,32 @@
     <string notr="true">QListView {
 border:none;
 }</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="add_peer_id">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>10</y>
+     <width>21</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/icons/add.png</normaloff>:/icons/icons/add.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>19</width>
+     <height>19</height>
+    </size>
    </property>
   </widget>
  </widget>

@@ -1,1 +1,1 @@
-python -m run
+python -m app

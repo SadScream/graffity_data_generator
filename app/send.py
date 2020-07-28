@@ -3,15 +3,14 @@
 import vk_api
 import sys
 import os
-from importlib import import_module
 
-from PySide2 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 from .extra import config_handler
-
-from .extra.design import Ui_Main
-from .extra.getPeer import Ui_PeerWindow
 from .extra.upload import Upload
+
+from .gui.Design import Ui_Main
+from .gui.GetPeer import Ui_PeerWindow
 
 from . import auth_config as module
 
@@ -125,15 +124,31 @@ class Window(QtWidgets.QMainWindow, Ui_Main):
 													peer=peer_id,
 													file=file)
 
-			if self.data == False:
-				print("Error")
-				self.data = None
-				return
+			if self.data[0] == None:
+				return self.show_error("data_error", self.data[1])
 
 			print(f"randint: {self.data[0]}\npeer_id: {self.data[1]}\nattachment: {self.data[2]}\n")
 			self.write_msg(self.vk, random_id=self.data[0], peer_id=self.data[1], message = msg, attachment=self.data[2])
 		else:
 			self.data = None
+
+
+	def show_error(self, key, additional = None):
+		errors = {
+			"data_error": "Operation failed"
+		}
+
+		show_url = QtWidgets.QMessageBox(self)
+		show_url.setIcon(QtWidgets.QMessageBox.Information)
+		error = errors[key]
+
+		if additional:
+			show_url.setDetailedText(additional)
+			error = f"{error}. Press 'Show details' for information"
+
+		show_url.setText(errors[key])
+		show_url.setWindowTitle("Ошибка!")
+		show_url.exec_()
 
 
 	def write_msg(self, vk_client, random_id: int, peer_id: int, message: str, attachment=None, keyboard=None):

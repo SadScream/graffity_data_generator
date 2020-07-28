@@ -23,7 +23,7 @@ class Upload:
 				attachment = f"doc{save['audio_message']['owner_id']}_{save['audio_message']['id']}_{save['audio_message']['access_key']}"
 		except Exception as E:
 			print(f"{os.path.split(__file__)[1]} => {self.uploader.__name__} [EXCEPTION] while trying to upload file:\t{E}")
-			return (None, None, None)
+			return (None, E, None)
 
 		digit = self.vk_api.utils.get_random_id()
 
